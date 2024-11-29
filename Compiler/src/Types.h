@@ -21,6 +21,7 @@ struct BuiltinAstTypes
 
     // AstName use here will not match the AstNameTable, but the was we use them here always force a full string compare
     AstTypeReference booleanType{{}, std::nullopt, AstName{"boolean"}, std::nullopt, {}};
+    AstTypeReference integerType{{}, std::nullopt, AstName{"integer"}, std::nullopt, {}};
     AstTypeReference numberType{{}, std::nullopt, AstName{"number"}, std::nullopt, {}};
     AstTypeReference stringType{{}, std::nullopt, AstName{"string"}, std::nullopt, {}};
     AstTypeReference vectorType{{}, std::nullopt, AstName{"vector"}, std::nullopt, {}};

@@ -551,6 +551,7 @@ static ic_env_t* ic_env_create( ic_malloc_fun_t* _malloc, ic_realloc_fun_t* _rea
 
   bbcode_style_def(env->bbcode, "keyword",  "#569cd6" );
   bbcode_style_def(env->bbcode, "control",  "#c586c0" );
+  bbcode_style_def(env->bbcode, "integer",  "#b5cea8");
   bbcode_style_def(env->bbcode, "number",   "#b5cea8" );
   bbcode_style_def(env->bbcode, "string",   "#ce9178" );
   bbcode_style_def(env->bbcode, "comment",  "#6A9955" );

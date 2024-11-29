@@ -2645,6 +2645,8 @@ std::tuple<TypeId, TypeId, RefinementId> ConstraintGenerator::checkBinary(
             discriminantTy = builtinTypes->nilType;
         else if (typeguard->type == "string")
             discriminantTy = builtinTypes->stringType;
+        else if (typeguard->type == "integer")
+            discriminantTy = builtinTypes->integerType;
         else if (typeguard->type == "number")
             discriminantTy = builtinTypes->numberType;
         else if (typeguard->type == "boolean")

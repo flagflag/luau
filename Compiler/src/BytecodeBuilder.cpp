@@ -356,6 +356,18 @@ int32_t BytecodeBuilder::addConstantBoolean(bool value)
     return addConstant(k, c);
 }
 
+int32_t BytecodeBuilder::addConstantInteger(long long value)
+{
+    Constant c = {Constant::Type_Integer};
+    c.valueNumber = value;
+
+    ConstantKey k = {Constant::Type_Integer};
+    static_assert(sizeof(k.value) == sizeof(value), "Expecting integer to be 64-bit");
+    memcpy(&k.value, &value, sizeof(value));
+
+    return addConstant(k, c);
+}
+
 int32_t BytecodeBuilder::addConstantNumber(double value)
 {
     Constant c = {Constant::Type_Number};
@@ -2277,6 +2289,8 @@ static const char* getBaseTypeString(uint8_t type)
         return "nil";
     case LBC_TYPE_BOOLEAN:
         return "boolean";
+    case LBC_TYPE_INTEGER:
+        return "integer";
     case LBC_TYPE_NUMBER:
         return "number";
     case LBC_TYPE_STRING:

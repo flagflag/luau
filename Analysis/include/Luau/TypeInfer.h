@@ -460,6 +460,7 @@ public:
 
 public:
     const TypeId nilType;
+    const TypeId integerType;
     const TypeId numberType;
     const TypeId stringType;
     const TypeId booleanType;

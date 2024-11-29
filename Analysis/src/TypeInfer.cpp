@@ -212,6 +212,7 @@ TypeChecker::TypeChecker(const ScopePtr& globalScope, ModuleResolver* resolver, 
     , normalizer(nullptr, builtinTypes, NotNull{&unifierState})
     , reusableInstantiation(TxnLog::empty(), nullptr, builtinTypes, {}, nullptr)
     , nilType(builtinTypes->nilType)
+    , integerType(builtinTypes->integerType)
     , numberType(builtinTypes->numberType)
     , stringType(builtinTypes->stringType)
     , booleanType(builtinTypes->booleanType)
@@ -1884,6 +1885,8 @@ WithPredicate<TypeId> TypeChecker::checkExpr(const ScopePtr& scope, const AstExp
         else
             result = WithPredicate{stringType};
     }
+    else if (expr.is<AstExprConstantInteger>())
+        result = WithPredicate{integerType};
     else if (expr.is<AstExprConstantNumber>())
         result = WithPredicate{numberType};
     else if (auto a = expr.as<AstExprLocal>())
@@ -6295,6 +6298,8 @@ void TypeChecker::resolve(const TypeGuardPredicate& typeguardP, RefinementMap& r
         return refine(isNil, nilType); // This can still happen when sense is false!
     else if (typeguardP.kind == "string")
         return refine(isString, stringType);
+    else if (typeguardP.kind == "integer")
+        return refine(isInteger, integerType);
     else if (typeguardP.kind == "number")
         return refine(isNumber, numberType);
     else if (typeguardP.kind == "boolean")

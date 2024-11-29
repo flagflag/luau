@@ -23,6 +23,8 @@ static LuauBytecodeType getPrimitiveType(AstName name)
         return LBC_TYPE_NIL;
     else if (name == "boolean")
         return LBC_TYPE_BOOLEAN;
+    else if (name == "integer")
+        return LBC_TYPE_INTEGER;
     else if (name == "number")
         return LBC_TYPE_NUMBER;
     else if (name == "string")

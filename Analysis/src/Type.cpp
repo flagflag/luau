@@ -183,6 +183,11 @@ bool isBoolean(TypeId ty)
     return false;
 }
 
+bool isInteger(TypeId ty)
+{
+    return isPrim(ty, PrimitiveType::Integer);
+}
+
 bool isNumber(TypeId ty)
 {
     return isPrim(ty, PrimitiveType::Number);
@@ -1020,6 +1025,7 @@ BuiltinTypes::BuiltinTypes()
     : arena(new TypeArena)
     , debugFreezeArena(FFlag::DebugLuauFreezeArena)
     , nilType(arena->addType(Type{PrimitiveType{PrimitiveType::NilType}, /*persistent*/ true}))
+    , integerType(arena->addType(Type{PrimitiveType{PrimitiveType::Integer}, /*persistent*/ true}))
     , numberType(arena->addType(Type{PrimitiveType{PrimitiveType::Number}, /*persistent*/ true}))
     , stringType(arena->addType(Type{PrimitiveType{PrimitiveType::String}, /*persistent*/ true}))
     , booleanType(arena->addType(Type{PrimitiveType{PrimitiveType::Boolean}, /*persistent*/ true}))

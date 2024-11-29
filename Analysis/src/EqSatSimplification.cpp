@@ -867,6 +867,8 @@ static std::string getNodeName(const StringCache& strings, const EType& node)
         return "nil";
     else if (node.get<TBoolean>())
         return "boolean";
+    else if (node.get<TInteger>())
+        return "integer";
     else if (node.get<TNumber>())
         return "number";
     else if (node.get<TString>())

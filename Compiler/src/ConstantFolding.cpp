@@ -250,6 +250,11 @@ struct ConstantVisitor : AstVisitor
             result.type = Constant::Type_Boolean;
             result.valueBoolean = expr->value;
         }
+        else if (AstExprConstantInteger* expr = node->as<AstExprConstantInteger>())
+        {
+            result.type = Constant::Type_Integer;
+            result.valueNumber = expr->value;
+        }
         else if (AstExprConstantNumber* expr = node->as<AstExprConstantNumber>())
         {
             result.type = Constant::Type_Number;

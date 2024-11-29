@@ -147,6 +147,7 @@ struct PrimitiveType
     {
         NilType, // ObjC #defines Nil :(
         Boolean,
+        Integer,
         Number,
         String,
         Thread,
@@ -911,6 +912,7 @@ std::vector<TypeId> flattenIntersection(TypeId ty);
 bool isPrim(TypeId ty, PrimitiveType::Type primType);
 bool isNil(TypeId ty);
 bool isBoolean(TypeId ty);
+bool isInteger(TypeId ty);
 bool isNumber(TypeId ty);
 bool isString(TypeId ty);
 bool isThread(TypeId ty);
@@ -972,6 +974,7 @@ public:
     const TypeId nilType;
     const TypeId numberType;
     const TypeId stringType;
+    const TypeId integerType;
     const TypeId booleanType;
     const TypeId threadType;
     const TypeId bufferType;

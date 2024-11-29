@@ -2176,6 +2176,19 @@ struct Compiler
             bytecode.emitABC(LOP_LOADB, target, cv->valueBoolean, 0);
             break;
 
+        case Constant::Type_Integer:
+        {
+            long long i = cv->valueInteger;
+
+            // long number encoding: use generic constant path
+            int32_t cid = bytecode.addConstantInteger(i);
+            if (cid < 0)
+                CompileError::raise(node->location, "Exceeded constant limit; simplify the code to compile");
+
+            emitLoadK(target, cid);
+        }
+        break;
+
         case Constant::Type_Number:
         {
             double d = cv->valueNumber;

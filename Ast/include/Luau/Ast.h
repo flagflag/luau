@@ -296,6 +296,19 @@ enum class ConstantNumberParseResult
     HexOverflow,
 };
 
+class AstExprConstantInteger : public AstExpr
+{
+public:
+    LUAU_RTTI(AstExprConstantInteger);
+
+    AstExprConstantInteger(const Location& location, unsigned long long value, ConstantNumberParseResult parseResult = ConstantNumberParseResult::Ok);
+
+    void visit(AstVisitor* visitor) override;
+
+    unsigned long long value;
+    ConstantNumberParseResult parseResult;
+};
+
 class AstExprConstantNumber : public AstExpr
 {
 public:

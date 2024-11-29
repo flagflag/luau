@@ -129,6 +129,8 @@ static std::string getTag(lua_State* L, TypeFunctionTypeId ty)
         return "nil";
     else if (auto b = get<TypeFunctionPrimitiveType>(ty); b && b->type == TypeFunctionPrimitiveType::Type::Boolean)
         return "boolean";
+    else if (auto i = get<TypeFunctionPrimitiveType>(ty); i && i->type == TypeFunctionPrimitiveType::Type::Integer)
+        return "integer";
     else if (auto n = get<TypeFunctionPrimitiveType>(ty); n && n->type == TypeFunctionPrimitiveType::Type::Number)
         return "number";
     else if (auto s = get<TypeFunctionPrimitiveType>(ty); s && s->type == TypeFunctionPrimitiveType::Type::String)
@@ -190,6 +192,15 @@ static int createAny(lua_State* L)
 static int createBoolean(lua_State* L)
 {
     allocTypeUserData(L, TypeFunctionPrimitiveType{TypeFunctionPrimitiveType::Boolean});
+
+    return 1;
+}
+
+// Luau: `type.integer`
+// Returns the type instance representing integer
+static int createInteger(lua_State* L)
+{
+    allocTypeUserData(L, TypeFunctionPrimitiveType{TypeFunctionPrimitiveType::Integer});
 
     return 1;
 }
@@ -1392,6 +1403,7 @@ void registerTypesLibrary(lua_State* L)
         {"never", createNever},
         {"any", createAny},
         {"boolean", createBoolean},
+        {"integer", createInteger},
         {"number", createNumber},
         {"string", createString},
         {nullptr, nullptr}
@@ -1509,6 +1521,7 @@ void registerTypeUserData(lua_State* L)
             {"never", createNever},
             {"any", createAny},
             {"boolean", createBoolean},
+            {"integer", createInteger},
             {"number", createNumber},
             {"string", createString},
             {nullptr, nullptr}

@@ -35,7 +35,7 @@ Lexeme::Lexeme(const Location& location, Type type, const char* data, size_t siz
 {
     LUAU_ASSERT(
         type == RawString || type == QuotedString || type == InterpStringBegin || type == InterpStringMid || type == InterpStringEnd ||
-        type == InterpStringSimple || type == BrokenInterpDoubleBrace || type == Number || type == Comment || type == BlockComment
+        type == InterpStringSimple || type == BrokenInterpDoubleBrace || type == Integer || type == Number || type == Comment || type == BlockComment
     );
 }
 
@@ -52,7 +52,7 @@ unsigned int Lexeme::getLength() const
 {
     LUAU_ASSERT(
         type == RawString || type == QuotedString || type == InterpStringBegin || type == InterpStringMid || type == InterpStringEnd ||
-        type == InterpStringSimple || type == BrokenInterpDoubleBrace || type == Number || type == Comment || type == BlockComment
+        type == InterpStringSimple || type == BrokenInterpDoubleBrace || type == Integer || type == Number || type == Comment || type == BlockComment
     );
 
     return length;
@@ -134,6 +134,9 @@ std::string Lexeme::toString() const
 
     case InterpStringSimple:
         return data ? format("`%.*s`", length, data) : "interpolated string";
+
+    case Integer:
+        return data ? format("'%.*s'", length, data) : "integer";
 
     case Number:
         return data ? format("'%.*s'", length, data) : "number";
@@ -642,13 +645,20 @@ Lexeme Lexer::readNumber(const Position& start, unsigned int startOffset)
     // This function does not do the number parsing - it only skips a number-like pattern.
     // It uses the same logic as Lua stock lexer; the resulting string is later converted
     // to a number with proper verification.
+    bool isFloatNumber = false;
+
     do
     {
         consume();
+
+        if (peekch() == '.')
+            isFloatNumber = true;
     } while (isDigit(peekch()) || peekch() == '.' || peekch() == '_');
 
     if (peekch() == 'e' || peekch() == 'E')
     {
+        isFloatNumber = true;
+
         consume();
 
         if (peekch() == '+' || peekch() == '-')
@@ -658,7 +668,7 @@ Lexeme Lexer::readNumber(const Position& start, unsigned int startOffset)
     while (isAlpha(peekch()) || isDigit(peekch()) || peekch() == '_')
         consume();
 
-    return Lexeme(Location(start, position()), Lexeme::Number, &buffer[startOffset], offset - startOffset);
+    return Lexeme(Location(start, position()), isFloatNumber ? Lexeme::Number : Lexeme::Integer, &buffer[startOffset], offset - startOffset);
 }
 
 std::pair<AstName, Lexeme::Type> Lexer::readName()

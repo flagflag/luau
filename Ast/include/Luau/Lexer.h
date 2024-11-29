@@ -48,6 +48,7 @@ struct Lexeme
 
         RawString,
         QuotedString,
+        Integer,
         Number,
         Name,
 

@@ -29,6 +29,7 @@ struct TypeFunctionPrimitiveType
     {
         NilType,
         Boolean,
+        Integer,
         Number,
         String,
     };

@@ -12,6 +12,7 @@ GlobalTypes::GlobalTypes(NotNull<BuiltinTypes> builtinTypes)
 
     globalScope->addBuiltinTypeBinding("any", TypeFun{{}, builtinTypes->anyType});
     globalScope->addBuiltinTypeBinding("nil", TypeFun{{}, builtinTypes->nilType});
+    globalScope->addBuiltinTypeBinding("integer", TypeFun{{}, builtinTypes->integerType});
     globalScope->addBuiltinTypeBinding("number", TypeFun{{}, builtinTypes->numberType});
     globalScope->addBuiltinTypeBinding("string", TypeFun{{}, builtinTypes->stringType});
     globalScope->addBuiltinTypeBinding("boolean", TypeFun{{}, builtinTypes->booleanType});

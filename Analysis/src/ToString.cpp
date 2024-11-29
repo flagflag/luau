@@ -572,6 +572,9 @@ struct TypeStringifier
         case PrimitiveType::Boolean:
             state.emit("boolean");
             return;
+        case PrimitiveType::Integer:
+            state.emit("integer");
+            return;
         case PrimitiveType::Number:
             state.emit("number");
             return;

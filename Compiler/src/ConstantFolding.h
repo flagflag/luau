@@ -15,6 +15,7 @@ struct Constant
         Type_Unknown,
         Type_Nil,
         Type_Boolean,
+        Type_Integer,
         Type_Number,
         Type_Vector,
         Type_String,
@@ -26,6 +27,7 @@ struct Constant
     union
     {
         bool valueBoolean;
+        long long valueInteger;
         double valueNumber;
         float valueVector[4];
         const char* valueString = nullptr; // length stored in stringLength

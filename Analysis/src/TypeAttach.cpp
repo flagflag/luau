@@ -98,6 +98,8 @@ public:
             return allocator->alloc<AstTypeReference>(Location(), std::nullopt, AstName("nil"), std::nullopt, Location());
         case PrimitiveType::Boolean:
             return allocator->alloc<AstTypeReference>(Location(), std::nullopt, AstName("boolean"), std::nullopt, Location());
+        case PrimitiveType::Integer:
+            return allocator->alloc<AstTypeReference>(Location(), std::nullopt, AstName("integer"), std::nullopt, Location());
         case PrimitiveType::Number:
             return allocator->alloc<AstTypeReference>(Location(), std::nullopt, AstName("number"), std::nullopt, Location());
         case PrimitiveType::String:

@@ -512,6 +512,8 @@ const char* getBytecodeTypeName(uint8_t type, const char* const* userdataTypes)
         return "nil";
     case LBC_TYPE_BOOLEAN:
         return "boolean";
+    case LBC_TYPE_INTEGER:
+        return "integer";
     case LBC_TYPE_NUMBER:
         return "number";
     case LBC_TYPE_STRING:

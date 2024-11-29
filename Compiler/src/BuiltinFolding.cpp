@@ -25,6 +25,13 @@ static Constant cbool(bool v)
     return res;
 }
 
+static Constant cint(long long i)
+{
+    Constant res = {Constant::Type_Integer};
+    res.valueInteger = i;
+    return res;
+}
+
 static Constant cnum(double v)
 {
     Constant res = {Constant::Type_Number};
@@ -62,6 +69,9 @@ static Constant ctype(const Constant& c)
     case Constant::Type_Boolean:
         return cstring("boolean");
 
+    case Constant::Type_Integer:
+        return cstring("integer");
+
     case Constant::Type_Number:
         return cstring("number");
 
@@ -88,6 +98,8 @@ Constant foldBuiltin(int bfid, const Constant* args, size_t count)
     switch (bfid)
     {
     case LBF_MATH_ABS:
+        if (count == 1 && args[0].type == Constant::Type_Integer)
+            return cint(fabs(args[0].valueInteger));
         if (count == 1 && args[0].type == Constant::Type_Number)
             return cnum(fabs(args[0].valueNumber));
         break;
@@ -174,6 +186,23 @@ Constant foldBuiltin(int bfid, const Constant* args, size_t count)
         break;
 
     case LBF_MATH_MAX:
+        if (count >= 1 && args[0].type == Constant::Type_Integer)
+        {
+            long long r = args[0].valueInteger;
+
+            for (size_t i = 1; i < count; ++i)
+            {
+                if (args[i].type != Constant::Type_Integer)
+                    return cvar();
+
+                long long a = args[i].valueInteger;
+
+                r = (a > r) ? a : r;
+            }
+
+            return cint(r);
+        }
+
         if (count >= 1 && args[0].type == Constant::Type_Number)
         {
             double r = args[0].valueNumber;
@@ -193,6 +222,23 @@ Constant foldBuiltin(int bfid, const Constant* args, size_t count)
         break;
 
     case LBF_MATH_MIN:
+        if (count >= 1 && args[0].type == Constant::Type_Integer)
+        {
+            long long r = args[0].valueInteger;
+
+            for (size_t i = 1; i < count; ++i)
+            {
+                if (args[i].type != Constant::Type_Integer)
+                    return cvar();
+
+                long long a = args[i].valueInteger;
+
+                r = (a < r) ? a : r;
+            }
+
+            return cint(r);
+        }
+
         if (count >= 1 && args[0].type == Constant::Type_Number)
         {
             double r = args[0].valueNumber;

@@ -23,6 +23,7 @@ using Id = Luau::EqSat::Id;
 
 LUAU_EQSAT_UNIT(TNil);
 LUAU_EQSAT_UNIT(TBoolean);
+LUAU_EQSAT_UNIT(TInteger);
 LUAU_EQSAT_UNIT(TNumber);
 LUAU_EQSAT_UNIT(TString);
 LUAU_EQSAT_UNIT(TThread);
@@ -108,6 +109,7 @@ private:
 using EType = EqSat::Language<
     TNil,
     TBoolean,
+    TInteger,
     TNumber,
     TString,
     TThread,

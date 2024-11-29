@@ -53,6 +53,7 @@ public:
 
     int32_t addConstantNil();
     int32_t addConstantBoolean(bool value);
+    int32_t addConstantInteger(long long value);
     int32_t addConstantNumber(double value);
     int32_t addConstantVector(float x, float y, float z, float w);
     int32_t addConstantString(StringRef value);
@@ -152,6 +153,7 @@ private:
         {
             Type_Nil,
             Type_Boolean,
+            Type_Integer,
             Type_Number,
             Type_Vector,
             Type_String,

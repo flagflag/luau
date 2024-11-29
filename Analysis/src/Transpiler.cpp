@@ -1052,7 +1052,7 @@ struct Printer
         {
             AstTypeReference* indexType = a->indexer ? a->indexer->indexType->as<AstTypeReference>() : nullptr;
 
-            if (a->props.size == 0 && indexType && indexType->name == "number")
+            if (a->props.size == 0 && indexType && (indexType->name == "integer" || indexType->name == "number"))
             {
                 writer.symbol("{");
                 visualizeTypeAnnotation(*a->indexer->resultType);

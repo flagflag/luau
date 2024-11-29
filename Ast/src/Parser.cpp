@@ -194,12 +194,14 @@ Parser::Parser(const char* buffer, size_t bufferSize, AstNameTable& names, Alloc
     if (FFlag::LuauAllowFragmentParsing)
     {
         nameSelf = names.getOrAdd("self");
+        nameInteger = names.getOrAdd("integer");
         nameNumber = names.getOrAdd("number");
         nameError = names.getOrAdd(kParseNameError);
     }
     else
     {
         nameSelf = names.addStatic("self");
+        nameInteger = names.addStatic("integer");
         nameNumber = names.addStatic("number");
         nameError = names.addStatic(kParseNameError);
     }
@@ -2470,7 +2472,7 @@ AstExpr* Parser::parseAssertionExpr()
 
 static ConstantNumberParseResult parseInteger(double& result, const char* data, int base)
 {
-    LUAU_ASSERT(base == 2 || base == 16);
+    LUAU_ASSERT(base == 2 || base == 16 || base == 10);
 
     char* end = nullptr;
     unsigned long long value = strtoull(data, &end, base);
@@ -2495,6 +2497,28 @@ static ConstantNumberParseResult parseInteger(double& result, const char* data, 
         return ConstantNumberParseResult::Imprecise;
 
     return ConstantNumberParseResult::Ok;
+}
+
+static ConstantNumberParseResult parseInteger(unsigned long long& result, const char* data)
+{
+    char* end = nullptr;
+
+    // binary literal
+    if (data[0] == '0' && (data[1] == 'b' || data[1] == 'B') && data[2])
+    {
+        result = strtoll(data + 2, &end, 2);
+        return *end == 0 ? ConstantNumberParseResult::Ok : ConstantNumberParseResult::Malformed;
+    }
+
+    // hexadecimal literal
+    if (data[0] == '0' && (data[1] == 'x' || data[1] == 'X') && data[2])
+    {
+        result = strtoll(data, &end, 16);
+        return *end == 0 ? ConstantNumberParseResult::Ok : ConstantNumberParseResult::Malformed;
+    }
+
+    result = strtoll(data, &end, 10);
+    return *end == 0 ? ConstantNumberParseResult::Ok : ConstantNumberParseResult::Malformed;
 }
 
 static ConstantNumberParseResult parseDouble(double& result, const char* data)
@@ -2573,6 +2597,10 @@ AstExpr* Parser::parseSimpleExpr()
         nextLexeme();
 
         return parseFunctionBody(false, matchFunction, AstName(), nullptr, attributes).first;
+    }
+    else if (lexer.current().type == Lexeme::Integer)
+    {
+        return parseInteger();
     }
     else if (lexer.current().type == Lexeme::Number)
     {
@@ -3197,6 +3225,28 @@ AstExpr* Parser::parseInterpString()
     AstArray<AstArray<char>> stringsArray = copy(strings);
     AstArray<AstExpr*> expressionsArray = copy(expressions);
     return allocator.alloc<AstExprInterpString>(Location{startLocation, endLocation}, stringsArray, expressionsArray);
+}
+
+AstExpr* Parser::parseInteger()
+{
+    Location start = lexer.current().location;
+
+    scratchData.assign(lexer.current().data, lexer.current().getLength());
+
+    // Remove all internal _ - they don't hold any meaning and this allows parsing code to just pass the string pointer to strtod et al
+    if (scratchData.find('_') != std::string::npos)
+    {
+        scratchData.erase(std::remove(scratchData.begin(), scratchData.end(), '_'), scratchData.end());
+    }
+
+    unsigned long long value = 0;
+    ConstantNumberParseResult result = Luau::parseInteger(value, scratchData.c_str());
+    nextLexeme();
+
+    if (result == ConstantNumberParseResult::Malformed)
+        return reportExprError(start, {}, "Malformed integer");
+
+    return allocator.alloc<AstExprConstantInteger>(start, value, result);
 }
 
 AstExpr* Parser::parseNumber()

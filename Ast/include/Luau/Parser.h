@@ -284,6 +284,7 @@ private:
 
     std::optional<AstArray<char>> parseCharArray();
     AstExpr* parseString();
+    AstExpr* parseInteger();
     AstExpr* parseNumber();
 
     AstLocal* pushLocal(const Binding& binding);
@@ -416,6 +417,7 @@ private:
     unsigned int recursionCounter;
 
     AstName nameSelf;
+    AstName nameInteger;
     AstName nameNumber;
     AstName nameError;
     AstName nameNil;
